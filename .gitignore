@@ -71,3 +71,6 @@ settings.json
 
 # Claude (optional - remove if you want to share Claude settings)
 .claude/
+
+# Internal docs (docs/ is for internal use only)
+docs/
