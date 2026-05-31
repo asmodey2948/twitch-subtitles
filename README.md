@@ -153,13 +153,12 @@ ML Service URL задаётся в `src/TwitchSubtitles.Web/appsettings.json`:
 
 ```
 TwitchSubtitles/
-├── docs/
-│   ├── PLAN.md                # План проекта
-│   ├── RUN.md                 # Документация запуска
-│   └── tasks/                 # Задачи по версиям
-└── src/
-    ├── TwitchSubtitles.ML/    # Python ML Service
-    └── TwitchSubtitles.Web/   # C# Backend + Frontend
+├── src/
+│   ├── TwitchSubtitles.ML/    # Python ML Service
+│   └── TwitchSubtitles.Web/   # C# Backend + Frontend
+├── start.sh                   # Запуск обоих сервисов
+├── stop.sh                    # Остановка сервисов
+└── README.md                  # Этот файл
 ```
 
 ## Лицензия
