@@ -34,9 +34,8 @@ app.MapControllers();
 app.MapGet("/api/version", async (HttpContext context, IMlServiceClient mlClient) =>
 {
     var assembly = Assembly.GetExecutingAssembly();
-    var backendVersion = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
-                      ?? assembly.GetName().Version?.ToString()
-                      ?? "unknown";
+    var assemblyName = assembly.GetName();
+    var backendVersion = assemblyName.Version?.ToString(3) ?? "unknown";
 
     string mlVersion = "unknown";
     try
