@@ -64,6 +64,11 @@ function showSubtitle(rusText, engText) {
         engLine.style.fontSize = settings.overlay_translation_font_size + "px";
         engLine.style.color = settings.overlay_translation_font_color;
         engLine.style.backgroundColor = `rgba(0, 0, 0, ${settings.overlay_translation_bg_opacity})`;
+        console.log("[Overlay] Translation styles:", {
+            fontSize: engLine.style.fontSize,
+            color: engLine.style.color,
+            backgroundColor: engLine.style.backgroundColor
+        });
         overlay.appendChild(engLine);
     }
 
@@ -92,8 +97,10 @@ function connect() {
     ws.onmessage = (event) => {
         const msg = JSON.parse(event.data);
         if (msg.type === "subtitle") {
+            console.log("[Overlay] Subtitle:", msg);
             showSubtitle(msg.rus_text, msg.eng_text);
         } else if (msg.type === "settings_update") {
+            console.log("[Overlay] Settings update:", msg);
             Object.assign(settings, msg);
             applyStyles();
         }
