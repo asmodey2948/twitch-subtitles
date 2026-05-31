@@ -29,7 +29,7 @@ const statusBlock = document.getElementById("status");
 const resultBlock = document.getElementById("result");
 const rusText = document.getElementById("rusText");
 const engText = document.getElementById("engText");
-const subtitlesBlock = document.getElementById("subtitles");
+const subtitlesDetails = document.getElementById("subtitles");
 const subtitleLog = document.getElementById("subtitleLog");
 const errorBlock = document.getElementById("error");
 
@@ -167,7 +167,7 @@ async function startMicrophone() {
         startMicBtn.disabled = true;
         stopMicBtn.disabled = false;
         subtitleLog.innerHTML = "";
-        showElement(subtitlesBlock);
+        showElement(subtitlesDetails);
         setStatus("success", "Подключение...");
     } catch (err) {
         showError(err.message || "Не удалось получить доступ к микрофону");

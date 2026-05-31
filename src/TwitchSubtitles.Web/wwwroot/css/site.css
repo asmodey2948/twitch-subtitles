@@ -227,6 +227,22 @@ details.settings-section > summary:hover {
     color: #2563eb;
 }
 
+/* Subtitles section */
+#subtitles {
+    margin-top: 1.5rem;
+}
+
+#subtitles summary {
+    cursor: pointer;
+    font-weight: 600;
+    user-select: none;
+    padding: 0.5rem 0;
+}
+
+#subtitles summary:hover {
+    color: #2563eb;
+}
+
 .obs-url {
     display: flex;
     align-items: center;
