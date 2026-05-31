@@ -45,8 +45,7 @@ html, body {
 
 .subtitle-translation {
     font-weight: 400;
-    opacity: 0.85;
-    /* Font size now set via inline styles for flexibility */
+    /* Font size and opacity now set via inline styles for flexibility */
 }
 
 @keyframes fadeIn {
