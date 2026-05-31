@@ -13,6 +13,7 @@ const overlayFontColor = document.getElementById("overlayFontColor");
 const overlayBgOpacity = document.getElementById("overlayBgOpacity");
 const overlayBgOpacityValue = document.getElementById("overlayBgOpacityValue");
 const overlayShowTranslation = document.getElementById("overlayShowTranslation");
+const overlayShowOriginal = document.getElementById("overlayShowOriginal");
 const obsUrl = document.getElementById("obsUrl");
 const copyObsUrl = document.getElementById("copyObsUrl");
 const sourceType = document.getElementById("sourceType");
@@ -44,6 +45,7 @@ let settings = {
     overlay_bg_opacity: 0.7,
     overlay_display_duration_ms: 5000,
     overlay_show_translation: true,
+    overlay_show_original: true,
 };
 
 // --- Source switching ---
@@ -370,6 +372,7 @@ async function loadSettings() {
         overlayBgOpacityValue.textContent = Math.round(settings.overlay_bg_opacity * 100);
         overlayDisplayDuration.value = settings.overlay_display_duration_ms / 1000;
         overlayShowTranslation.checked = settings.overlay_show_translation;
+        overlayShowOriginal.checked = settings.overlay_show_original;
         obsUrl.textContent = `${location.origin}/overlay.html`;
 
         enableSettingsInputs(true);
@@ -405,6 +408,7 @@ function enableSettingsInputs(enabled) {
     overlayBgOpacity.disabled = !enabled;
     overlayDisplayDuration.disabled = !enabled;
     overlayShowTranslation.disabled = !enabled;
+    overlayShowOriginal.disabled = !enabled;
 }
 
 sttModel.addEventListener("change", async () => {
@@ -475,6 +479,10 @@ overlayDisplayDuration.addEventListener("change", async () => {
 
 overlayShowTranslation.addEventListener("change", async () => {
     await saveSettings({ overlay_show_translation: overlayShowTranslation.checked });
+});
+
+overlayShowOriginal.addEventListener("change", async () => {
+    await saveSettings({ overlay_show_original: overlayShowOriginal.checked });
 });
 
 copyObsUrl.addEventListener("click", () => {

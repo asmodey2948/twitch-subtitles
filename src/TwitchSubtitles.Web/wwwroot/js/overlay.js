@@ -6,6 +6,7 @@ let settings = {
     overlay_bg_opacity: 0.7,
     overlay_display_duration_ms: 5000,
     overlay_show_translation: true,
+    overlay_show_original: true,
 };
 
 let ws = null;
@@ -42,10 +43,13 @@ function showSubtitle(rusText, engText) {
 
     overlay.innerHTML = "";
 
-    const rusLine = document.createElement("div");
-    rusLine.className = "subtitle-line";
-    rusLine.textContent = rusText;
-    overlay.appendChild(rusLine);
+    // Show original text only if enabled
+    if (settings.overlay_show_original) {
+        const rusLine = document.createElement("div");
+        rusLine.className = "subtitle-line";
+        rusLine.textContent = rusText;
+        overlay.appendChild(rusLine);
+    }
 
     if (settings.overlay_show_translation && engText) {
         const engLine = document.createElement("div");

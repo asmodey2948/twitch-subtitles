@@ -42,7 +42,8 @@ public class SettingsService
                 OverlayFontColor = _settings.OverlayFontColor,
                 OverlayBgOpacity = _settings.OverlayBgOpacity,
                 OverlayDisplayDurationMs = _settings.OverlayDisplayDurationMs,
-                OverlayShowTranslation = _settings.OverlayShowTranslation
+                OverlayShowTranslation = _settings.OverlayShowTranslation,
+                OverlayShowOriginal = _settings.OverlayShowOriginal
             };
         }
     }
@@ -61,6 +62,7 @@ public class SettingsService
             if (patch.OverlayBgOpacity.HasValue) _settings.OverlayBgOpacity = patch.OverlayBgOpacity.Value;
             if (patch.OverlayDisplayDurationMs.HasValue) _settings.OverlayDisplayDurationMs = patch.OverlayDisplayDurationMs.Value;
             if (patch.OverlayShowTranslation.HasValue) _settings.OverlayShowTranslation = patch.OverlayShowTranslation.Value;
+            if (patch.OverlayShowOriginal.HasValue) _settings.OverlayShowOriginal = patch.OverlayShowOriginal.Value;
 
             SaveToDisk();
             return GetSettings();

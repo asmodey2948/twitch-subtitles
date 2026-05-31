@@ -35,6 +35,9 @@ public class AppSettings
 
     [JsonPropertyName("overlay_show_translation")]
     public bool OverlayShowTranslation { get; set; } = true;
+
+    [JsonPropertyName("overlay_show_original")]
+    public bool OverlayShowOriginal { get; set; } = true;
 }
 
 public class AppSettingsUpdate
@@ -68,4 +71,7 @@ public class AppSettingsUpdate
 
     [JsonPropertyName("overlay_show_translation")]
     public bool? OverlayShowTranslation { get; set; }
+
+    [JsonPropertyName("overlay_show_original")]
+    public bool? OverlayShowOriginal { get; set; }
 }
