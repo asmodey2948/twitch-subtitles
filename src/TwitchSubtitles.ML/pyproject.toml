@@ -1,0 +1,20 @@
+[project]
+name = "twitch-subtitles-ml"
+version = "0.2.3"
+description = "ML service for Twitch Subtitles: Whisper STT + MarianMT translation"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi==0.115.6",
+    "uvicorn[standard]==0.34.0",
+    "python-multipart==0.0.20",
+    "faster-whisper",
+    "transformers==4.48.0",
+    "sentencepiece==0.2.0",
+    "accelerate==1.2.1",
+    "soundfile==0.13.0",
+    "sacremoses",
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"

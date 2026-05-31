@@ -1,0 +1,73 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+.coverage
+htmlcov/
+
+# C#
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+*.sln.cache
+bin/
+obj/
+[Oo]bj/
+[Bb]in/
+*.vsidx
+*.vspscc
+*.vssscc
+*.sap
+*.pidb
+*.scc
+.vs/
+.vscode/
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.swp
+*~
+
+# IDE
+.idea/
+*.iml
+*.iws
+*.ipr
+*.nb-gradle/
+
+# Project-specific
+settings.json
+*.cache
+*.log
+
+# Claude (optional - remove if you want to share Claude settings)
+.claude/

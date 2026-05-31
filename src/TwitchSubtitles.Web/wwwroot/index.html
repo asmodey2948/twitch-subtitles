@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Twitch Subtitles</title>
+    <link rel="stylesheet" href="/css/site.css?v=0.3.0" />
+</head>
+<body>
+    <div class="container">
+        <h1>Twitch Subtitles</h1>
+
+        <!-- Настройки -->
+        <div class="settings-section">
+            <div class="form-group">
+                <label for="sttModel">Модель STT</label>
+                <select id="sttModel" disabled>
+                    <option value="">Загрузка...</option>
+                </select>
+            </div>
+            <div class="form-group form-row">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="vadEnabled" checked disabled />
+                    VAD (фильтр тишины)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="dedupEnabled" checked disabled />
+                    Дедупликация
+                </label>
+            </div>
+            <div class="form-group form-row">
+                <div class="form-field">
+                    <label for="chunkDuration">Чанк (сек)</label>
+                    <input type="number" id="chunkDuration" min="1" max="10" step="0.5" value="3" disabled />
+                </div>
+                <div class="form-field">
+                    <label for="overlapDuration">Оверлап (сек)</label>
+                    <input type="number" id="overlapDuration" min="0" max="3" step="0.5" value="0" disabled />
+                </div>
+            </div>
+        </div>
+
+        <!-- Настройки оверлея -->
+        <details class="settings-section">
+            <summary>Оверлей для OBS</summary>
+            <div class="form-group">
+                <label>OBS Browser Source URL</label>
+                <div class="obs-url">
+                    <code id="obsUrl"></code>
+                    <button id="copyObsUrl" type="button">Копировать</button>
+                </div>
+            </div>
+            <div class="form-group form-row">
+                <div class="form-field">
+                    <label for="overlayFontSize">Размер шрифта: <span id="overlayFontSizeValue">24</span>px</label>
+                    <input type="range" id="overlayFontSize" min="12" max="48" value="24" disabled />
+                </div>
+                <div class="form-field">
+                    <label for="overlayDisplayDuration">Время показа (сек)</label>
+                    <input type="number" id="overlayDisplayDuration" min="1" max="15" step="1" value="5" disabled />
+                </div>
+            </div>
+            <div class="form-group form-row">
+                <div class="form-field">
+                    <label for="overlayFontColor">Цвет текста</label>
+                    <input type="color" id="overlayFontColor" value="#FFFFFF" disabled />
+                </div>
+                <div class="form-field">
+                    <label for="overlayBgOpacity">Подложка: <span id="overlayBgOpacityValue">70</span>%</label>
+                    <input type="range" id="overlayBgOpacity" min="0" max="100" step="5" value="70" disabled />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="overlayShowTranslation" checked disabled />
+                    Показывать перевод
+                </label>
+            </div>
+        </details>
+
+        <!-- Выбор источника -->
+        <div class="form-group">
+            <label for="sourceType">Источник</label>
+            <select id="sourceType">
+                <option value="file">Загрузить файл</option>
+                <option value="microphone">Микрофон</option>
+            </select>
+        </div>
+
+        <!-- Файловая загрузка -->
+        <div id="fileSection">
+            <form id="uploadForm">
+                <div class="form-group">
+                    <label for="fileInput">Выберите аудиофайл (.mp3, .wav)</label>
+                    <input type="file" id="fileInput" accept=".mp3,.wav" required />
+                </div>
+                <button type="submit" id="submitBtn">Загрузить</button>
+            </form>
+        </div>
+
+        <!-- Микрофон -->
+        <div id="micSection" hidden>
+            <div class="form-group">
+                <label for="micDevice">Устройство</label>
+                <select id="micDevice"></select>
+            </div>
+            <button id="startMicBtn">Начать запись</button>
+            <button id="stopMicBtn" disabled>Остановить</button>
+        </div>
+
+        <!-- Статус -->
+        <div id="status" class="status" hidden></div>
+
+        <!-- Результат (файловый режим) -->
+        <div id="result" hidden>
+            <div class="result-block">
+                <h2>Русский текст</h2>
+                <div id="rusText" class="result-text"></div>
+            </div>
+            <div class="result-block">
+                <h2>English text</h2>
+                <div id="engText" class="result-text"></div>
+            </div>
+        </div>
+
+        <!-- Субтитры (streaming режим) -->
+        <div id="subtitles" hidden>
+            <h2>Субтитры</h2>
+            <div id="subtitleLog" class="subtitle-log"></div>
+        </div>
+
+        <!-- Ошибка -->
+        <div id="error" class="error" hidden></div>
+    </div>
+
+    <script src="/js/app.js?v=0.3.0"></script>
+</body>
+</html>
