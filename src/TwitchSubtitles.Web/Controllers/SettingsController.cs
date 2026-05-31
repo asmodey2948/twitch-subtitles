@@ -74,7 +74,8 @@ public class SettingsController : ControllerBase
             patch.OverlayShowTranslation.HasValue ||
             patch.OverlayShowOriginal.HasValue ||
             patch.OverlayTranslationFontSize.HasValue ||
-            patch.OverlayTranslationBgOpacity.HasValue;
+            patch.OverlayTranslationBgOpacity.HasValue ||
+            patch.OverlayTranslationFontColor is not null;
 
         if (overlaySettingsChanged)
         {
@@ -87,7 +88,8 @@ public class SettingsController : ControllerBase
                 OverlayShowTranslation = updated.OverlayShowTranslation,
                 OverlayShowOriginal = updated.OverlayShowOriginal,
                 OverlayTranslationFontSize = updated.OverlayTranslationFontSize,
-                OverlayTranslationBgOpacity = updated.OverlayTranslationBgOpacity
+                OverlayTranslationBgOpacity = updated.OverlayTranslationBgOpacity,
+                OverlayTranslationFontColor = updated.OverlayTranslationFontColor
             };
             await _broadcaster.BroadcastSettingsAsync(settingsMessage);
         }

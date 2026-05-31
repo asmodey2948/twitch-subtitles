@@ -44,6 +44,9 @@ public class AppSettings
 
     [JsonPropertyName("overlay_translation_bg_opacity")]
     public double OverlayTranslationBgOpacity { get; set; } = 0.5;
+
+    [JsonPropertyName("overlay_translation_font_color")]
+    public string OverlayTranslationFontColor { get; set; } = "#FFFFFF";
 }
 
 public class AppSettingsUpdate
@@ -86,4 +89,7 @@ public class AppSettingsUpdate
 
     [JsonPropertyName("overlay_translation_bg_opacity")]
     public double? OverlayTranslationBgOpacity { get; set; }
+
+    [JsonPropertyName("overlay_translation_font_color")]
+    public string? OverlayTranslationFontColor { get; set; }
 }

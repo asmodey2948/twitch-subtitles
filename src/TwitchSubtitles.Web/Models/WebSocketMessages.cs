@@ -116,4 +116,7 @@ public class SettingsUpdateMessage : WebSocketMessage
 
     [JsonPropertyName("overlay_translation_bg_opacity")]
     public double OverlayTranslationBgOpacity { get; set; }
+
+    [JsonPropertyName("overlay_translation_font_color")]
+    public string OverlayTranslationFontColor { get; set; } = string.Empty;
 }

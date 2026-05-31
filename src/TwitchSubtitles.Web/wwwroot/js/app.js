@@ -18,6 +18,7 @@ const overlayTranslationFontSize = document.getElementById("overlayTranslationFo
 const overlayTranslationFontSizeValue = document.getElementById("overlayTranslationFontSizeValue");
 const overlayTranslationBgOpacity = document.getElementById("overlayTranslationBgOpacity");
 const overlayTranslationBgOpacityValue = document.getElementById("overlayTranslationBgOpacityValue");
+const overlayTranslationFontColor = document.getElementById("overlayTranslationFontColor");
 const obsUrl = document.getElementById("obsUrl");
 const copyObsUrl = document.getElementById("copyObsUrl");
 const sourceType = document.getElementById("sourceType");
@@ -52,6 +53,7 @@ let settings = {
     overlay_show_original: true,
     overlay_translation_font_size: 19,
     overlay_translation_bg_opacity: 0.5,
+    overlay_translation_font_color: "#FFFFFF",
 };
 
 // --- Source switching ---
@@ -383,6 +385,7 @@ async function loadSettings() {
         overlayTranslationFontSizeValue.textContent = settings.overlay_translation_font_size;
         overlayTranslationBgOpacity.value = Math.round(settings.overlay_translation_bg_opacity * 100);
         overlayTranslationBgOpacityValue.textContent = Math.round(settings.overlay_translation_bg_opacity * 100);
+        overlayTranslationFontColor.value = settings.overlay_translation_font_color;
         obsUrl.textContent = `${location.origin}/overlay.html`;
 
         enableSettingsInputs(true);
@@ -421,6 +424,7 @@ function enableSettingsInputs(enabled) {
     overlayShowOriginal.disabled = !enabled;
     overlayTranslationFontSize.disabled = !enabled;
     overlayTranslationBgOpacity.disabled = !enabled;
+    overlayTranslationFontColor.disabled = !enabled;
 }
 
 sttModel.addEventListener("change", async () => {
@@ -517,6 +521,10 @@ overlayTranslationBgOpacity.addEventListener("change", async () => {
     if (val >= 0 && val <= 1) {
         await saveSettings({ overlay_translation_bg_opacity: val });
     }
+});
+
+overlayTranslationFontColor.addEventListener("change", async () => {
+    await saveSettings({ overlay_translation_font_color: overlayTranslationFontColor.value });
 });
 
 copyObsUrl.addEventListener("click", () => {
