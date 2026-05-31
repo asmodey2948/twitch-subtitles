@@ -37,7 +37,8 @@ function applyStyles() {
 }
 
 function showSubtitle(rusText, engText) {
-    if (!rusText) return;
+    // Show subtitle if we have any text
+    if (!rusText && !engText) return;
 
     if (hideTimer) {
         clearTimeout(hideTimer);
@@ -46,14 +47,15 @@ function showSubtitle(rusText, engText) {
 
     overlay.innerHTML = "";
 
-    // Show original text only if enabled
-    if (settings.overlay_show_original) {
+    // Show original text only if enabled and we have it
+    if (settings.overlay_show_original && rusText) {
         const rusLine = document.createElement("div");
         rusLine.className = "subtitle-line";
         rusLine.textContent = rusText;
         overlay.appendChild(rusLine);
     }
 
+    // Show translation if enabled and we have it
     if (settings.overlay_show_translation && engText) {
         const engLine = document.createElement("div");
         engLine.className = "subtitle-line subtitle-translation";
@@ -65,7 +67,10 @@ function showSubtitle(rusText, engText) {
         overlay.appendChild(engLine);
     }
 
-    hideTimer = setTimeout(hideSubtitle, settings.overlay_display_duration_ms);
+    // Only set hide timer if we have something to show
+    if (overlay.innerHTML !== "") {
+        hideTimer = setTimeout(hideSubtitle, settings.overlay_display_duration_ms);
+    }
 }
 
 function hideSubtitle() {
