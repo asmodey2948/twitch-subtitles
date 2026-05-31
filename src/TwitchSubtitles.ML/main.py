@@ -17,12 +17,13 @@ from translation import translate
 
 app = FastAPI(title="TwitchSubtitles ML Service")
 
+__version__ = "0.3.0"
 ALLOWED_EXTENSIONS = {".mp3", ".wav"}
 
 
 @app.get("/health")
 async def health():
-    return {"status": "ok"}
+    return {"status": "ok", "version": __version__}
 
 
 @app.post("/process-audio", response_model=ProcessAudioResponse)

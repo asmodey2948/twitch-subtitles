@@ -68,4 +68,12 @@ public class MlServiceClient : IMlServiceClient
         return await response.Content.ReadFromJsonAsync<MlSettingsResponse>()
             ?? throw new InvalidOperationException("ML service returned empty response.");
     }
+
+    public async Task<MlVersionResponse> GetVersionAsync()
+    {
+        var response = await _httpClient.GetAsync("/health");
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<MlVersionResponse>()
+            ?? throw new InvalidOperationException("ML service returned empty response.");
+    }
 }

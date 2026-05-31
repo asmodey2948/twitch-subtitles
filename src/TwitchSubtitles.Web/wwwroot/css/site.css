@@ -17,8 +17,19 @@ body {
 }
 
 h1 {
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.5rem;
     font-size: 1.5rem;
+}
+
+.versions {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+.versions span {
+    font-weight: 600;
+    color: #333;
 }
 
 h2 {

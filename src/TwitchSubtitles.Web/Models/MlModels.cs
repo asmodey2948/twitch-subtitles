@@ -31,3 +31,12 @@ public class MlSettingsResponse
     [JsonPropertyName("vad_enabled")]
     public bool VadEnabled { get; set; } = true;
 }
+
+public class MlVersionResponse
+{
+    [JsonPropertyName("status")]
+    public string Status { get; set; } = string.Empty;
+
+    [JsonPropertyName("version")]
+    public string Version { get; set; } = string.Empty;
+}

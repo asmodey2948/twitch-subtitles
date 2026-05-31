@@ -8,4 +8,5 @@ public interface IMlServiceClient
     Task<SubtitlesResponse> ProcessAudioChunkAsync(byte[] audioData);
     Task<MlModelsResponse> GetModelsAsync();
     Task<MlSettingsResponse> UpdateSettingsAsync(string? model, bool? vadEnabled);
+    Task<MlVersionResponse> GetVersionAsync();
 }

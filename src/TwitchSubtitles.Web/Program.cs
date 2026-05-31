@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.AspNetCore.Http;
 using TwitchSubtitles.Web.Handlers;
 using TwitchSubtitles.Web.Services;
@@ -28,6 +29,28 @@ app.UseWebSockets(new WebSocketOptions
     KeepAliveInterval = TimeSpan.FromSeconds(30)
 });
 app.MapControllers();
+
+// Version endpoint
+app.MapGet("/api/version", async (HttpContext context, IMlServiceClient mlClient) =>
+{
+    var assembly = Assembly.GetExecutingAssembly();
+    var backendVersion = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
+                      ?? assembly.GetName().Version?.ToString()
+                      ?? "unknown";
+
+    string mlVersion = "unknown";
+    try
+    {
+        var mlResponse = await mlClient.GetVersionAsync();
+        mlVersion = mlResponse.Version ?? "unknown";
+    }
+    catch
+    {
+        mlVersion = "unavailable";
+    }
+
+    return Results.Ok(new { backend = backendVersion, ml = mlVersion });
+});
 
 // WebSocket endpoint для streaming субтитров
 app.Map("/ws/subtitles", async context =>

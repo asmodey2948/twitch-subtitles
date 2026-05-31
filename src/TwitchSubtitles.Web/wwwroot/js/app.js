@@ -1,4 +1,6 @@
 // --- DOM Elements ---
+const backendVersion = document.getElementById("backendVersion");
+const mlVersion = document.getElementById("mlVersion");
 const sttModel = document.getElementById("sttModel");
 const vadEnabled = document.getElementById("vadEnabled");
 const dedupEnabled = document.getElementById("dedupEnabled");
@@ -483,7 +485,23 @@ copyObsUrl.addEventListener("click", () => {
     });
 });
 
+loadVersions();
 loadSettings();
+
+// --- Load versions ---
+async function loadVersions() {
+    try {
+        const response = await fetch("/api/version");
+        if (!response.ok) throw new Error("Failed to load versions");
+        const data = await response.json();
+        backendVersion.textContent = data.backend || "unknown";
+        mlVersion.textContent = data.ml || "unknown";
+    } catch (err) {
+        console.warn("Could not load versions:", err);
+        backendVersion.textContent = "error";
+        mlVersion.textContent = "error";
+    }
+}
 
 // --- Helpers ---
 function setStatus(type, text) {
