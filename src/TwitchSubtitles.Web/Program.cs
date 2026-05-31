@@ -9,7 +9,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddHttpClient<IMlServiceClient, MlServiceClient>();
+// Configure HttpClient with extended timeout for large model downloads
+builder.Services.AddHttpClient<IMlServiceClient, MlServiceClient>(client =>
+{
+    client.Timeout = TimeSpan.FromMinutes(20);
+});
 builder.Services.AddSingleton<SettingsService>();
 builder.Services.AddSingleton<WebSocketBroadcaster>();
 builder.Services.AddTransient<SubtitlesWebSocketHandler>();

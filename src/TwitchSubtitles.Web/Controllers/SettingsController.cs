@@ -40,12 +40,70 @@ public class SettingsController : ControllerBase
         return Ok(settings);
     }
 
+    [HttpGet("download-progress")]
+    public async Task<IActionResult> GetDownloadProgress()
+    {
+        try
+        {
+            var progress = await _mlClient.GetDownloadProgressAsync();
+            return Ok(progress);
+        }
+        catch (HttpRequestException ex)
+        {
+            _logger.LogError(ex, "ML service unavailable for download progress");
+            return StatusCode(503, new DownloadProgressResponse
+            {
+                Status = "error",
+                Error = "ML service is unavailable"
+            });
+        }
+    }
+
+    [HttpDelete("models-cache")]
+    public async Task<IActionResult> ClearModelsCache()
+    {
+        try
+        {
+            var result = await _mlClient.ClearModelsCacheAsync();
+            return Ok(result);
+        }
+        catch (HttpRequestException ex)
+        {
+            _logger.LogError(ex, "ML service unavailable for cache clearing");
+            return StatusCode(503, new ClearCacheResponse
+            {
+                Status = "error",
+                Message = "ML service is unavailable"
+            });
+        }
+    }
+
+    [HttpGet("models-cached")]
+    public async Task<IActionResult> GetCachedModels()
+    {
+        try
+        {
+            var cached = await _mlClient.GetCachedModelsAsync();
+            return Ok(cached);
+        }
+        catch (HttpRequestException ex)
+        {
+            _logger.LogError(ex, "ML service unavailable for cached models check");
+            return StatusCode(503, new CachedModelsResponse
+            {
+                Models = new List<CachedModelInfo>()
+            });
+        }
+    }
+
     [HttpPut]
     public async Task<IActionResult> UpdateSettings([FromBody] AppSettingsUpdate patch)
     {
         var current = _settingsService.GetSettings();
 
-        var modelChanged = patch.Model is not null && patch.Model != current.Model;
+        // Always forward model changes to ML service, even if same model
+        // This allows for reload after cache clear
+        var modelChanged = patch.Model is not null;
         var vadChanged = patch.VadEnabled.HasValue && patch.VadEnabled.Value != current.VadEnabled;
 
         if (modelChanged || vadChanged)

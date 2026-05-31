@@ -9,4 +9,7 @@ public interface IMlServiceClient
     Task<MlModelsResponse> GetModelsAsync();
     Task<MlSettingsResponse> UpdateSettingsAsync(string? model, bool? vadEnabled);
     Task<MlVersionResponse> GetVersionAsync();
+    Task<DownloadProgressResponse> GetDownloadProgressAsync();
+    Task<ClearCacheResponse> ClearModelsCacheAsync();
+    Task<CachedModelsResponse> GetCachedModelsAsync();
 }

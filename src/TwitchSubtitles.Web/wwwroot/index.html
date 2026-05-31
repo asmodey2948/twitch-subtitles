@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Twitch Subtitles</title>
-    <link rel="stylesheet" href="/css/site.css?v=0.3.3" />
+    <link rel="stylesheet" href="/css/site.css?v=0.3.6" />
 </head>
 <body>
     <div class="container">
@@ -23,6 +23,20 @@
                 <select id="sttModel" disabled>
                     <option value="">Загрузка...</option>
                 </select>
+                <div id="cachedModelsInfo" class="cached-models-info" hidden></div>
+                <div id="modelProgressBar" class="model-progress-bar" hidden>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-text">
+                        <span id="progressStatus">Загрузка...</span>
+                        <span id="progressPercent">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <button id="clearCacheBtn" type="button" class="secondary-button">🗑️ Очистить кэш моделей</button>
             </div>
             <div class="form-group form-row">
                 <label class="checkbox-label">
@@ -177,8 +191,6 @@
             <button id="stopMicBtn" disabled>Остановить</button>
         </div>
 
-        <!-- Статус -->
-        <div id="status" class="status" hidden></div>
 
         <!-- Результат (файловый режим) -->
         <div id="result" hidden>
@@ -202,6 +214,6 @@
         <div id="error" class="error" hidden></div>
     </div>
 
-    <script src="/js/app.js?v=0.3.1"></script>
+    <script src="/js/app.js?v=0.3.4"></script>
 </body>
 </html>

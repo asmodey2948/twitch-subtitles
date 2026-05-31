@@ -61,9 +61,8 @@ public class MlServiceClient : IMlServiceClient
 
     public async Task<MlSettingsResponse> UpdateSettingsAsync(string? model, bool? vadEnabled)
     {
-        using var cts = new CancellationTokenSource(TimeSpan.FromMinutes(5));
         var request = new { model, vad_enabled = vadEnabled };
-        var response = await _httpClient.PutAsJsonAsync("/settings", request, cts.Token);
+        var response = await _httpClient.PutAsJsonAsync("/settings", request);
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<MlSettingsResponse>()
             ?? throw new InvalidOperationException("ML service returned empty response.");
@@ -75,5 +74,29 @@ public class MlServiceClient : IMlServiceClient
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<MlVersionResponse>()
             ?? throw new InvalidOperationException("ML service returned empty response.");
+    }
+
+    public async Task<DownloadProgressResponse> GetDownloadProgressAsync()
+    {
+        var response = await _httpClient.GetAsync("/download-progress");
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<DownloadProgressResponse>()
+            ?? new DownloadProgressResponse { Status = "idle", Progress = 0 };
+    }
+
+    public async Task<ClearCacheResponse> ClearModelsCacheAsync()
+    {
+        var response = await _httpClient.DeleteAsync("/models/cache");
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<ClearCacheResponse>()
+            ?? new ClearCacheResponse { Status = "ok", Message = "Cache cleared", FreedBytes = 0, FreedMb = 0 };
+    }
+
+    public async Task<CachedModelsResponse> GetCachedModelsAsync()
+    {
+        var response = await _httpClient.GetAsync("/models/cached");
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<CachedModelsResponse>()
+            ?? new CachedModelsResponse { Models = new List<CachedModelInfo>() };
     }
 }

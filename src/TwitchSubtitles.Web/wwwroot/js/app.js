@@ -2,6 +2,12 @@
 const backendVersion = document.getElementById("backendVersion");
 const mlVersion = document.getElementById("mlVersion");
 const sttModel = document.getElementById("sttModel");
+const modelProgressBar = document.getElementById("modelProgressBar");
+const progressFill = document.getElementById("progressFill");
+const progressStatus = document.getElementById("progressStatus");
+const progressPercent = document.getElementById("progressPercent");
+const clearCacheBtn = document.getElementById("clearCacheBtn");
+const cachedModelsInfo = document.getElementById("cachedModelsInfo");
 const vadEnabled = document.getElementById("vadEnabled");
 const dedupEnabled = document.getElementById("dedupEnabled");
 const chunkDuration = document.getElementById("chunkDuration");
@@ -30,7 +36,6 @@ const submitBtn = document.getElementById("submitBtn");
 const micDevice = document.getElementById("micDevice");
 const startMicBtn = document.getElementById("startMicBtn");
 const stopMicBtn = document.getElementById("stopMicBtn");
-const statusBlock = document.getElementById("status");
 const resultBlock = document.getElementById("result");
 const rusText = document.getElementById("rusText");
 const engText = document.getElementById("engText");
@@ -62,7 +67,6 @@ sourceType.addEventListener("change", () => {
     fileSection.hidden = isMic;
     micSection.hidden = !isMic;
     hideElement(errorBlock);
-    hideElement(statusBlock);
 });
 
 // --- File upload ---
@@ -72,7 +76,6 @@ uploadForm.addEventListener("submit", async (e) => {
     const file = fileInput.files[0];
     if (!file) return;
 
-    setStatus("processing", "Обработка...");
     hideElement(resultBlock);
     hideElement(errorBlock);
     submitBtn.disabled = true;
@@ -95,11 +98,9 @@ uploadForm.addEventListener("submit", async (e) => {
         rusText.textContent = data.rus_text || "(пусто)";
         engText.textContent = data.eng_text || "(empty)";
         showElement(resultBlock);
-        setStatus("success", "Готово");
     } catch (err) {
         errorBlock.textContent = err.message;
         showElement(errorBlock);
-        setStatus("error", "Ошибка");
     } finally {
         submitBtn.disabled = false;
     }
@@ -136,7 +137,6 @@ async function startMicrophone() {
 
         ws.onopen = () => {
             console.log("[WS] Connected");
-            setStatus("success", "Запись активна");
         };
 
         ws.onmessage = (event) => {
@@ -176,7 +176,6 @@ async function startMicrophone() {
         stopMicBtn.disabled = false;
         subtitleLog.innerHTML = "";
         showElement(subtitlesDetails);
-        setStatus("success", "Подключение...");
     } catch (err) {
         showError(err.message || "Не удалось получить доступ к микрофону");
     }
@@ -208,7 +207,6 @@ function stopMicrophone() {
 
     startMicBtn.disabled = false;
     stopMicBtn.disabled = true;
-    setStatus("success", "Запись остановлена");
 }
 
 function sendCurrentBuffer() {
@@ -431,10 +429,63 @@ sttModel.addEventListener("change", async () => {
     const model = sttModel.value;
     if (!model) return;
     enableSettingsInputs(false);
-    setStatus("processing", `Загрузка модели ${model}...`);
-    await saveSettings({ model });
-    setStatus("success", `Модель: ${model}`);
-    enableSettingsInputs(true);
+
+    // Show progress bar
+    modelProgressBar.hidden = false;
+    progressFill.style.width = "0%";
+    progressStatus.textContent = `Загрузка модели ${model}...`;
+    progressPercent.textContent = "0%";
+
+    // Start progress polling
+    const progressInterval = setInterval(async () => {
+        try {
+            const response = await fetch("/api/settings/download-progress");
+            if (response.ok) {
+                const progress = await response.json();
+
+                // Update progress bar
+                progressFill.style.width = `${progress.progress}%`;
+                progressPercent.textContent = `${progress.progress}%`;
+
+                // Update status text based on state
+                switch (progress.status) {
+                    case "downloading":
+                        progressStatus.textContent = `Скачивание: ${progress.filename || model}`;
+                        break;
+                    case "loading":
+                        progressStatus.textContent = `Загрузка модели ${model}...`;
+                        break;
+                    case "complete":
+                        progressStatus.textContent = `Модель ${model} загружена`;
+                        clearInterval(progressInterval);
+                        setTimeout(() => {
+                            modelProgressBar.hidden = true;
+                            // Reload cached models info after download completes
+                            loadCachedModels();
+                        }, 2000);
+                        break;
+                    case "error":
+                        progressStatus.textContent = `Ошибка: ${progress.error || "неизвестная ошибка"}`;
+                        progressFill.style.width = "100%";
+                        progressFill.style.background = "#dc2626";
+                        clearInterval(progressInterval);
+                        break;
+                }
+            }
+        } catch (err) {
+            console.warn("Failed to fetch download progress:", err);
+        }
+    }, 500);
+
+    try {
+        await saveSettings({ model });
+    } catch (err) {
+        showError(err.message);
+        clearInterval(progressInterval);
+        modelProgressBar.hidden = true;
+    } finally {
+        enableSettingsInputs(true);
+    }
 });
 
 vadEnabled.addEventListener("change", async () => {
@@ -535,8 +586,35 @@ copyObsUrl.addEventListener("click", () => {
     });
 });
 
+clearCacheBtn.addEventListener("click", async () => {
+    if (!confirm("Удалить скачанные модели кроме текущей? Это освободит место на диске.")) {
+        return;
+    }
+
+    const originalText = clearCacheBtn.textContent;
+    clearCacheBtn.disabled = true;
+    clearCacheBtn.textContent = "Удаление...";
+
+    try {
+        const response = await fetch("/api/settings/models-cache", { method: "DELETE" });
+        if (!response.ok) throw new Error("Failed to clear cache");
+
+        const result = await response.json();
+        alert(`Кэш очищен!\nОсвобождено: ${result.freed_mb} МБ\nУдалено моделей: ${result.message || "N/A"}`);
+
+        // Reload cached models info after clearing cache
+        await loadCachedModels();
+    } catch (err) {
+        showError(`Ошибка очистки кэша: ${err.message}`);
+    } finally {
+        clearCacheBtn.disabled = false;
+        clearCacheBtn.textContent = originalText;
+    }
+});
+
 loadVersions();
 loadSettings();
+loadCachedModels();
 
 // --- Load versions ---
 async function loadVersions() {
@@ -553,17 +631,48 @@ async function loadVersions() {
     }
 }
 
-// --- Helpers ---
-function setStatus(type, text) {
-    statusBlock.textContent = text;
-    statusBlock.className = `status status-${type}`;
-    showElement(statusBlock);
+// --- Load cached models info ---
+async function loadCachedModels() {
+    try {
+        const response = await fetch("/api/settings/models-cached");
+        if (!response.ok) throw new Error("Failed to load cached models info");
+        const data = await response.json();
+
+        if (data.models && data.models.length > 0) {
+            cachedModelsInfo.innerHTML = "";
+
+            data.models.forEach(model => {
+                const item = document.createElement("span");
+                item.className = "cached-model-item";
+
+                if (model.cached) {
+                    item.innerHTML = `
+                        <span class="cached-badge">✓</span>
+                        <span>${model.name}</span>
+                        <span class="size-badge">${model.size_mb} МБ</span>
+                    `;
+                } else {
+                    item.innerHTML = `
+                        <span style="color: #9ca3af;">○</span>
+                        <span>${model.name}</span>
+                        <span class="size-badge">need download</span>
+                    `;
+                }
+
+                cachedModelsInfo.appendChild(item);
+            });
+
+            cachedModelsInfo.hidden = false;
+        }
+    } catch (err) {
+        console.warn("Could not load cached models info:", err);
+    }
 }
 
+// --- Helpers ---
 function showError(message) {
     errorBlock.textContent = message;
     showElement(errorBlock);
-    setStatus("error", "Ошибка");
 }
 
 function showElement(el) {
