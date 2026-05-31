@@ -20,7 +20,12 @@ public enum MessageTypeId
     /// <summary>
     /// Ошибка.
     /// </summary>
-    Error
+    Error,
+
+    /// <summary>
+    /// Обновление настроек.
+    /// </summary>
+    SettingsUpdate
 }
 
 /// <summary>
@@ -81,4 +86,28 @@ public class ErrorMessage : WebSocketMessage
     /// </summary>
     [JsonPropertyName("error")]
     public string Error { get; set; } = string.Empty;
+}
+
+/// <summary>
+/// Сообщение с обновлением настроек оверлея.
+/// </summary>
+public class SettingsUpdateMessage : WebSocketMessage
+{
+    [JsonPropertyName("overlay_font_size")]
+    public int OverlayFontSize { get; set; }
+
+    [JsonPropertyName("overlay_font_color")]
+    public string OverlayFontColor { get; set; } = string.Empty;
+
+    [JsonPropertyName("overlay_bg_opacity")]
+    public double OverlayBgOpacity { get; set; }
+
+    [JsonPropertyName("overlay_display_duration_ms")]
+    public int OverlayDisplayDurationMs { get; set; }
+
+    [JsonPropertyName("overlay_show_translation")]
+    public bool OverlayShowTranslation { get; set; }
+
+    [JsonPropertyName("overlay_show_original")]
+    public bool OverlayShowOriginal { get; set; }
 }

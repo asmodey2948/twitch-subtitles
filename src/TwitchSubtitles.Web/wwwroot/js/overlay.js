@@ -81,6 +81,9 @@ function connect() {
         const msg = JSON.parse(event.data);
         if (msg.type === "subtitle") {
             showSubtitle(msg.rus_text, msg.eng_text);
+        } else if (msg.type === "settings_update") {
+            Object.assign(settings, msg);
+            applyStyles();
         }
     };
 

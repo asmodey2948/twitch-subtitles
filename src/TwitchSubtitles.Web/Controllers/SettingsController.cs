@@ -10,12 +10,14 @@ public class SettingsController : ControllerBase
 {
     private readonly SettingsService _settingsService;
     private readonly IMlServiceClient _mlClient;
+    private readonly WebSocketBroadcaster _broadcaster;
     private readonly ILogger<SettingsController> _logger;
 
-    public SettingsController(SettingsService settingsService, IMlServiceClient mlClient, ILogger<SettingsController> logger)
+    public SettingsController(SettingsService settingsService, IMlServiceClient mlClient, WebSocketBroadcaster broadcaster, ILogger<SettingsController> logger)
     {
         _settingsService = settingsService;
         _mlClient = mlClient;
+        _broadcaster = broadcaster;
         _logger = logger;
     }
 
@@ -62,6 +64,30 @@ public class SettingsController : ControllerBase
         }
 
         var updated = _settingsService.UpdateSettings(patch);
+
+        // Broadcast overlay settings via WebSocket if they changed
+        var overlaySettingsChanged =
+            patch.OverlayFontSize.HasValue ||
+            patch.OverlayFontColor is not null ||
+            patch.OverlayBgOpacity.HasValue ||
+            patch.OverlayDisplayDurationMs.HasValue ||
+            patch.OverlayShowTranslation.HasValue ||
+            patch.OverlayShowOriginal.HasValue;
+
+        if (overlaySettingsChanged)
+        {
+            var settingsMessage = new SettingsUpdateMessage
+            {
+                OverlayFontSize = updated.OverlayFontSize,
+                OverlayFontColor = updated.OverlayFontColor,
+                OverlayBgOpacity = updated.OverlayBgOpacity,
+                OverlayDisplayDurationMs = updated.OverlayDisplayDurationMs,
+                OverlayShowTranslation = updated.OverlayShowTranslation,
+                OverlayShowOriginal = updated.OverlayShowOriginal
+            };
+            await _broadcaster.BroadcastSettingsAsync(settingsMessage);
+        }
+
         return Ok(updated);
     }
 }

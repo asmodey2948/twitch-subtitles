@@ -68,4 +68,39 @@ public class WebSocketBroadcaster
             _clients.TryRemove(id, out _);
         }
     }
+
+    public async Task BroadcastSettingsAsync(SettingsUpdateMessage message)
+    {
+        message.Type = MessageTypeId.SettingsUpdate;
+        message.Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
+        var json = JsonSerializer.Serialize(message, _jsonOptions);
+        var bytes = Encoding.UTF8.GetBytes(json);
+        var segment = new ArraySegment<byte>(bytes);
+
+        var deadClients = new List<string>();
+
+        foreach (var (id, ws) in _clients)
+        {
+            if (ws.State != WebSocketState.Open)
+            {
+                deadClients.Add(id);
+                continue;
+            }
+
+            try
+            {
+                await ws.SendAsync(segment, WebSocketMessageType.Text, true, CancellationToken.None);
+            }
+            catch (WebSocketException)
+            {
+                deadClients.Add(id);
+            }
+        }
+
+        foreach (var id in deadClients)
+        {
+            _clients.TryRemove(id, out _);
+        }
+    }
 }
