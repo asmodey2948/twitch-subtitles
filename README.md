@@ -32,12 +32,15 @@ Twitch Subtitles транскрибирует русскую речь в тек�
 ## Быстрый старт
 
 ```bash
-# Запуск обоих сервисов
-cd <project-root>
-# Вручную: два терминала
+# Автоматический запуск обоих сервисов (рекомендуется)
+./start.sh
 ```
 
-### 1. Python ML Service
+### Ручной запуск
+
+Если скрипт не работает, запусти сервисы вручную в двух терминалах.
+
+#### 1. Python ML Service
 
 ```bash
 cd src/TwitchSubtitles.ML
@@ -49,7 +52,7 @@ uvicorn main:app --host 127.0.0.1 --port 8000
 
 При первом запуске скачаются модели (faster-whisper ~150MB, MarianMT ~300MB).
 
-### 2. C# Backend
+#### 2. C# Backend
 
 ```bash
 cd src/TwitchSubtitles.Web
