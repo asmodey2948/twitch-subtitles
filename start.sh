@@ -48,8 +48,12 @@ sleep 2
 
 echo "[2/4] Запуск ML Service (port $ML_PORT)..."
 cd "$ML_DIR"
-source .venv/Scripts/activate
-uvicorn main:app --host 127.0.0.1 --port $ML_PORT &
+# В Git Bash на Windows используем прямой путь к Python в .venv
+PYTHON_BIN="$ML_DIR/.venv/Scripts/python"
+if [ ! -f "$PYTHON_BIN" ]; then
+    PYTHON_BIN="$ML_DIR/.venv/Scripts/python.exe"
+fi
+"$PYTHON_BIN" -m uvicorn main:app --host 127.0.0.1 --port $ML_PORT &
 ML_PID=$!
 
 # Ожидание health check
