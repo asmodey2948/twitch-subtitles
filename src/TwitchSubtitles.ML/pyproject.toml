@@ -1,6 +1,6 @@
 [project]
 name = "twitch-subtitles-ml"
-version = "0.3.0"
+version = "0.3.1"
 description = "ML service for Twitch Subtitles: Whisper STT + MarianMT translation"
 requires-python = ">=3.12"
 dependencies = [

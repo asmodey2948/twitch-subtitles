@@ -17,7 +17,7 @@ from translation import translate
 
 app = FastAPI(title="TwitchSubtitles ML Service")
 
-__version__ = "0.3.0"
+__version__ = "0.3.1"
 ALLOWED_EXTENSIONS = {".mp3", ".wav"}
 
 
