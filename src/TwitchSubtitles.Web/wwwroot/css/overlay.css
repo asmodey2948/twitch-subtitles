@@ -33,10 +33,14 @@ html, body {
     white-space: pre-wrap;
     word-break: break-word;
     animation: fadeIn 0.3s ease;
-    transition: opacity 0.5s ease;
     font-size: var(--overlay-font-size, 24px);
     color: var(--overlay-font-color, #FFFFFF);
     background: var(--overlay-bg, rgba(0, 0, 0, 0.7));
+}
+
+.subtitle-line.fading {
+    opacity: 0;
+    transition: opacity 0.5s ease;
 }
 
 .subtitle-line.fading {
