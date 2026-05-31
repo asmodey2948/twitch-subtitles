@@ -110,4 +110,10 @@ public class SettingsUpdateMessage : WebSocketMessage
 
     [JsonPropertyName("overlay_show_original")]
     public bool OverlayShowOriginal { get; set; }
+
+    [JsonPropertyName("overlay_translation_font_size")]
+    public int OverlayTranslationFontSize { get; set; }
+
+    [JsonPropertyName("overlay_translation_bg_opacity")]
+    public double OverlayTranslationBgOpacity { get; set; }
 }

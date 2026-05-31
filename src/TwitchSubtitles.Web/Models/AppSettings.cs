@@ -38,6 +38,12 @@ public class AppSettings
 
     [JsonPropertyName("overlay_show_original")]
     public bool OverlayShowOriginal { get; set; } = true;
+
+    [JsonPropertyName("overlay_translation_font_size")]
+    public int OverlayTranslationFontSize { get; set; } = 19;
+
+    [JsonPropertyName("overlay_translation_bg_opacity")]
+    public double OverlayTranslationBgOpacity { get; set; } = 0.5;
 }
 
 public class AppSettingsUpdate
@@ -74,4 +80,10 @@ public class AppSettingsUpdate
 
     [JsonPropertyName("overlay_show_original")]
     public bool? OverlayShowOriginal { get; set; }
+
+    [JsonPropertyName("overlay_translation_font_size")]
+    public int? OverlayTranslationFontSize { get; set; }
+
+    [JsonPropertyName("overlay_translation_bg_opacity")]
+    public double? OverlayTranslationBgOpacity { get; set; }
 }

@@ -14,6 +14,10 @@ const overlayBgOpacity = document.getElementById("overlayBgOpacity");
 const overlayBgOpacityValue = document.getElementById("overlayBgOpacityValue");
 const overlayShowTranslation = document.getElementById("overlayShowTranslation");
 const overlayShowOriginal = document.getElementById("overlayShowOriginal");
+const overlayTranslationFontSize = document.getElementById("overlayTranslationFontSize");
+const overlayTranslationFontSizeValue = document.getElementById("overlayTranslationFontSizeValue");
+const overlayTranslationBgOpacity = document.getElementById("overlayTranslationBgOpacity");
+const overlayTranslationBgOpacityValue = document.getElementById("overlayTranslationBgOpacityValue");
 const obsUrl = document.getElementById("obsUrl");
 const copyObsUrl = document.getElementById("copyObsUrl");
 const sourceType = document.getElementById("sourceType");
@@ -46,6 +50,8 @@ let settings = {
     overlay_display_duration_ms: 5000,
     overlay_show_translation: true,
     overlay_show_original: true,
+    overlay_translation_font_size: 19,
+    overlay_translation_bg_opacity: 0.5,
 };
 
 // --- Source switching ---
@@ -373,6 +379,10 @@ async function loadSettings() {
         overlayDisplayDuration.value = settings.overlay_display_duration_ms / 1000;
         overlayShowTranslation.checked = settings.overlay_show_translation;
         overlayShowOriginal.checked = settings.overlay_show_original;
+        overlayTranslationFontSize.value = settings.overlay_translation_font_size;
+        overlayTranslationFontSizeValue.textContent = settings.overlay_translation_font_size;
+        overlayTranslationBgOpacity.value = Math.round(settings.overlay_translation_bg_opacity * 100);
+        overlayTranslationBgOpacityValue.textContent = Math.round(settings.overlay_translation_bg_opacity * 100);
         obsUrl.textContent = `${location.origin}/overlay.html`;
 
         enableSettingsInputs(true);
@@ -409,6 +419,8 @@ function enableSettingsInputs(enabled) {
     overlayDisplayDuration.disabled = !enabled;
     overlayShowTranslation.disabled = !enabled;
     overlayShowOriginal.disabled = !enabled;
+    overlayTranslationFontSize.disabled = !enabled;
+    overlayTranslationBgOpacity.disabled = !enabled;
 }
 
 sttModel.addEventListener("change", async () => {
@@ -483,6 +495,28 @@ overlayShowTranslation.addEventListener("change", async () => {
 
 overlayShowOriginal.addEventListener("change", async () => {
     await saveSettings({ overlay_show_original: overlayShowOriginal.checked });
+});
+
+overlayTranslationFontSize.addEventListener("input", () => {
+    overlayTranslationFontSizeValue.textContent = overlayTranslationFontSize.value;
+});
+
+overlayTranslationFontSize.addEventListener("change", async () => {
+    const val = parseInt(overlayTranslationFontSize.value);
+    if (val >= 10 && val <= 40) {
+        await saveSettings({ overlay_translation_font_size: val });
+    }
+});
+
+overlayTranslationBgOpacity.addEventListener("input", () => {
+    overlayTranslationBgOpacityValue.textContent = overlayTranslationBgOpacity.value;
+});
+
+overlayTranslationBgOpacity.addEventListener("change", async () => {
+    const val = parseInt(overlayTranslationBgOpacity.value) / 100;
+    if (val >= 0 && val <= 1) {
+        await saveSettings({ overlay_translation_bg_opacity: val });
+    }
 });
 
 copyObsUrl.addEventListener("click", () => {

@@ -7,6 +7,8 @@ let settings = {
     overlay_display_duration_ms: 5000,
     overlay_show_translation: true,
     overlay_show_original: true,
+    overlay_translation_font_size: 19,
+    overlay_translation_bg_opacity: 0.5,
 };
 
 let ws = null;
@@ -55,6 +57,9 @@ function showSubtitle(rusText, engText) {
         const engLine = document.createElement("div");
         engLine.className = "subtitle-line subtitle-translation";
         engLine.textContent = engText;
+        // Apply translation-specific styles
+        engLine.style.fontSize = settings.overlay_translation_font_size + "px";
+        engLine.style.backgroundColor = `rgba(0, 0, 0, ${settings.overlay_translation_bg_opacity})`;
         overlay.appendChild(engLine);
     }
 

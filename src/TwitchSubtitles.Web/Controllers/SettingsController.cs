@@ -72,7 +72,9 @@ public class SettingsController : ControllerBase
             patch.OverlayBgOpacity.HasValue ||
             patch.OverlayDisplayDurationMs.HasValue ||
             patch.OverlayShowTranslation.HasValue ||
-            patch.OverlayShowOriginal.HasValue;
+            patch.OverlayShowOriginal.HasValue ||
+            patch.OverlayTranslationFontSize.HasValue ||
+            patch.OverlayTranslationBgOpacity.HasValue;
 
         if (overlaySettingsChanged)
         {
@@ -83,7 +85,9 @@ public class SettingsController : ControllerBase
                 OverlayBgOpacity = updated.OverlayBgOpacity,
                 OverlayDisplayDurationMs = updated.OverlayDisplayDurationMs,
                 OverlayShowTranslation = updated.OverlayShowTranslation,
-                OverlayShowOriginal = updated.OverlayShowOriginal
+                OverlayShowOriginal = updated.OverlayShowOriginal,
+                OverlayTranslationFontSize = updated.OverlayTranslationFontSize,
+                OverlayTranslationBgOpacity = updated.OverlayTranslationBgOpacity
             };
             await _broadcaster.BroadcastSettingsAsync(settingsMessage);
         }
